@@ -1,0 +1,9 @@
+{
+    "idf.flashType": "UART",
+    "idf.portWin": "COM5",
+    "files.associations": {
+        "esp32_rf_transmitter.c": "cpp",
+        "main.h": "c",
+        "button.h": "c"
+    }
+}
