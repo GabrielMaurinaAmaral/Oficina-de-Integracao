@@ -5,9 +5,9 @@
 QueueHandle_t BOTAO_queue = NULL;
 
 // Dados a serem transmitidos
-static unsigned long data = 143629925;
-static int bitLength = 28;
-static const Protocol *protocol = &proto[5]; // Protocolo 6
+volatile unsigned long receivedData = 0; //static unsigned long data = 143629925;
+volatile int receivedBitLength = 0; //static int bitLength = 28;
+volatile int receivedProtocolIndex = 0; //static const Protocol *protocol = &proto[5]; // Protocolo 6
 
 void IRAM_ATTR button_isr_handler(void* arg) {
     uint8_t dummy = 0;
@@ -18,7 +18,24 @@ void button_task(void* arg) {
     uint8_t dummy;
     while (1) {
         if (xQueueReceive(BOTAO_queue, &dummy, portMAX_DELAY)) {
-            sendRFSignal(data, bitLength, protocol);
+            // Receber os dados do receptor
+            receivedData = getReceivedValue();
+            receivedBitLength = getReceivedBitlength();
+            receivedProtocolIndex = getReceivedProtocol() - 1;
+
+            ESP_LOGI("BUTTON", "Dados recebidos: %lu, BitLength: %d, ProtocolIndex: %d", receivedData, receivedBitLength, receivedProtocolIndex);
+
+            // Verificar se os dados recebidos são válidos
+            if (receivedProtocolIndex >= 0 && receivedProtocolIndex < sizeof(proto) / sizeof(proto[0])) {
+                const Protocol *receivedProtocol = &proto[receivedProtocolIndex];
+
+                // Enviar o sinal RF com os dados recebidos
+                while (gpio_get_level(14) == 0) { // pino do botao
+                    sendRFSignal(receivedData, receivedBitLength, receivedProtocol);
+                }
+            } else {
+                ESP_LOGE("BUTTON", "Protocolo recebido inválido: %d", receivedProtocolIndex + 1);
+            }
         }
     }
 }

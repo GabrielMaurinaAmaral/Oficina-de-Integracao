@@ -16,4 +16,5 @@ unsigned int getReceivedDelay();
 unsigned int getReceivedProtocol();
 unsigned int* getReceivedRawdata();
 
+
 #endif /* ESP32_RF_RECEIVER_H */

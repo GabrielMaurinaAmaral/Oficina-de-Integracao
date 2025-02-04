@@ -140,9 +140,8 @@ void receiver_rf433(void* pvParameter)
       ESP_LOGE(TAG, "RF433 interrurpt fail"); // Log de erro se a recepção da fila falhar
     }
     else {
-          ESP_LOGW(TAG, "Received %lu / %dbit Protocol: %d.\n", getReceivedValue(), getReceivedBitlength(), prot_num); // Log dos dados recebidos
-            resetAvailable(); // Reseta a disponibilidade dos dados
-        }
+      ESP_LOGW(TAG, "Received %lu / %d bit / Protocol: %d.\n", getReceivedValue(), getReceivedBitlength(), prot_num); // Log dos dados recebidos        
+    }
   }
 }
 

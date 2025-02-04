@@ -1,5 +1,6 @@
 #include "main.h"
-
+// 1,5ms cada bit
+// cada alto ou baixo é 500 us
 void app_main() 
 {
     // Inicializa o transmissor RF no pino 12
@@ -12,10 +13,7 @@ void app_main()
 
     // Loop principal para verificar se há dados recebidos
     while (1) {
-        if (available()) {
-            ESP_LOGI(TAG, "Received %lu / %dbit Protocol: %d.\n", getReceivedValue(), getReceivedBitlength(), getReceivedProtocol());
-            resetAvailable();
-        }
-        vTaskDelay(pdMS_TO_TICKS(10)); // Aguarda 10 ms antes de verificar novamente
+
+        vTaskDelay(pdMS_TO_TICKS(100)); // Aguarda 10 ms antes de verificar novamente
     }
 }
