@@ -162,7 +162,7 @@ void init_rf_receiver(uint8_t rx_pin) {
 
         printf("GPIO configurado: RF_RX_PINO=%d.\n", RF_RX_PINO);
         printf("Aguardando inicialização...\n");
-        vTaskDelay(pdMS_TO_TICKS(10)); 
+        vTaskDelay(pdMS_TO_TICKS(100)); 
 
 
         gpio_config(&data_pin_config);

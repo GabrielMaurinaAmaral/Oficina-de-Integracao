@@ -19,7 +19,7 @@ void button_task(void* arg) {
     while (1) {
         if (xQueueReceive(BOTAO_queue, &dummy, portMAX_DELAY)) {
             // Receber os dados do receptor
-            receivedData = getReceivedValue();
+            receivedData = getReceivedValue(); 
             receivedBitLength = getReceivedBitlength();
             receivedProtocolIndex = getReceivedProtocol() - 1;
 
@@ -55,7 +55,7 @@ void init_button(uint8_t button_pin) {
             printf("GPIO configurado: BOTAO_PINO = %d.\n", button_pin);
             printf("Aguardando inicialização...\n");
 
-            vTaskDelay(pdMS_TO_TICKS(10));
+            vTaskDelay(pdMS_TO_TICKS(100));
 
             gpio_config(&data_pin_BOTAO_config);
 
