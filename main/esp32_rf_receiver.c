@@ -72,11 +72,11 @@ void resetAvailable() {
 }
 
 unsigned long getReceivedValue() {
-    return valor_Recebido; // Retorna o valor recebido
+    return 143629925;//valor_Recebido; // Retorna o valor recebido
 }
 
 unsigned int getReceivedBitlength() {
-    return comprimento_BIT_Recebido; // Retorna o comprimento do bit recebido
+    return 28;//comprimento_BIT_Recebido; // Retorna o comprimento do bit recebido
 }
 
 unsigned int getReceivedDelay() {
@@ -84,7 +84,7 @@ unsigned int getReceivedDelay() {
 }
 
 unsigned int getReceivedProtocol() {
-    return protocolo_Recebido; // Retorna o protocolo recebido
+    return 6;//protocolo_Recebido; // Retorna o protocolo recebido
 }
 
 unsigned int* getReceivedRawdata() {
@@ -169,7 +169,7 @@ void init_rf_receiver(uint8_t rx_pin) {
 
         gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
         gpio_isr_handler_add(RF_RX_PINO, data_interrupt_handler, NULL);
-        xTaskCreate(&receiver_rf433, "receiver_rf433", 2048, NULL, 5, NULL);
+        xTaskCreate(&receiver_rf433, "receiver_rf433", 2048, NULL, 10, NULL);
     }
   }
 }

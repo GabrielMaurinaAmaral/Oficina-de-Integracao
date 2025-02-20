@@ -5,9 +5,12 @@
 QueueHandle_t BOTAO_queue = NULL;
 
 // Dados a serem transmitidos
-volatile unsigned long receivedData = 0; //static unsigned long data = 143629925;
-volatile int receivedBitLength = 0; //static int bitLength = 28;
-volatile int receivedProtocolIndex = 0; //static const Protocol *protocol = &proto[5]; // Protocolo 6
+volatile unsigned long receivedData = 0;
+volatile int receivedBitLength = 0;
+volatile int receivedProtocolIndex = 0;
+
+// Variável para armazenar o estado do botão
+volatile bool button_pressed = false;
 
 void IRAM_ATTR button_isr_handler(void* arg) {
     uint8_t dummy = 0;
@@ -18,23 +21,36 @@ void button_task(void* arg) {
     uint8_t dummy;
     while (1) {
         if (xQueueReceive(BOTAO_queue, &dummy, portMAX_DELAY)) {
-            // Receber os dados do receptor
-            receivedData = getReceivedValue(); 
-            receivedBitLength = getReceivedBitlength();
-            receivedProtocolIndex = getReceivedProtocol() - 1;
+            // Verifica o estado atual do botão
+            bool current_state = (gpio_get_level(14) == 0);
 
-            ESP_LOGI("BUTTON", "Dados recebidos: %lu, BitLength: %d, ProtocolIndex: %d", receivedData, receivedBitLength, receivedProtocolIndex);
+            if (current_state && !button_pressed) {
+                // Botão foi pressionado
+                button_pressed = true;
 
-            // Verificar se os dados recebidos são válidos
-            if (receivedProtocolIndex >= 0 && receivedProtocolIndex < sizeof(proto) / sizeof(proto[0])) {
-                const Protocol *receivedProtocol = &proto[receivedProtocolIndex];
+                // Receber os dados do receptor
+                receivedData = getReceivedValue(); 
+                receivedBitLength = getReceivedBitlength();
+                receivedProtocolIndex = getReceivedProtocol() - 1;
 
-                // Enviar o sinal RF com os dados recebidos
-                while (gpio_get_level(14) == 0) { // pino do botao
-                    sendRFSignal(receivedData, receivedBitLength, receivedProtocol);
+                ESP_LOGI("BUTTON", "Dados recebidos: %lu, BitLength: %d, ProtocolIndex: %d", receivedData, receivedBitLength, receivedProtocolIndex);
+
+                // Verificar se os dados recebidos são válidos
+                if (receivedProtocolIndex >= 0 && receivedProtocolIndex < sizeof(proto) / sizeof(proto[0])) {
+                    const Protocol *receivedProtocol = &proto[receivedProtocolIndex];
+
+                    // Enviar o sinal RF continuamente enquanto o botão estiver pressionado
+                    while (button_pressed) {
+                        sendRFSignal(receivedData, receivedBitLength, receivedProtocol);
+                        vTaskDelay(pdMS_TO_TICKS(10)); // Pequeno delay para evitar sobrecarga
+                        button_pressed = (gpio_get_level(14) == 0); // Atualiza o estado do botão
+                    }
+                } else {
+                    ESP_LOGE("BUTTON", "Protocolo recebido inválido: %d", receivedProtocolIndex + 1);
                 }
-            } else {
-                ESP_LOGE("BUTTON", "Protocolo recebido inválido: %d", receivedProtocolIndex + 1);
+            } else if (!current_state && button_pressed) {
+                // Botão foi solto
+                button_pressed = false;
             }
         }
     }
@@ -61,7 +77,7 @@ void init_button(uint8_t button_pin) {
 
             gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
             gpio_isr_handler_add(button_pin, button_isr_handler, NULL);
-            xTaskCreate(button_task, "button_task", 2048, NULL, 10, NULL);
+            xTaskCreate(button_task, "button_task", 2048, NULL, 5, NULL);
         }
     }
 }

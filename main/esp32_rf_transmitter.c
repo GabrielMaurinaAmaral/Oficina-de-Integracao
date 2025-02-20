@@ -7,36 +7,30 @@ static uint8_t RF_TX_PINO;
 
 void sendRFSignal(unsigned long data, int bitLength, const Protocol *protocol)
 {
-    // enviando sinal
-    gpio_set_level(RF_TX_PINO, 0); // BAIXO
-    esp_rom_delay_us(protocol->pulseLength * protocol->syncFactor.high);
-    //ESP_LOGI(TAG, "High=%d",  protocol->syncFactor.high);
-    gpio_set_level(RF_TX_PINO, 1); // ALTO
-    esp_rom_delay_us(protocol->pulseLength * protocol->syncFactor.low);
-     //ESP_LOGI(TAG, "Low=%d",  protocol->syncFactor.low);
-
     for (int i = 0; i < bitLength; i++)
     {
         if (data & (1 << (bitLength - 1 - i)))
         {
             // enviando '1' bit no sinal
-            gpio_set_level(RF_TX_PINO, 0); // BAIXO
+            gpio_set_level(RF_TX_PINO, 1); // BAIXO
             esp_rom_delay_us(protocol->pulseLength * protocol->one.high);
-            gpio_set_level(RF_TX_PINO, 1); // ALTO
+            gpio_set_level(RF_TX_PINO, 0); // ALTO
             esp_rom_delay_us(protocol->pulseLength * protocol->one.low);
-            //ESP_LOGI(TAG, "Sent 1 bit: high=%d, low=%d", protocol->one.high, protocol->one.low);
         }
         else
         {
             // enviando'0' bit no sinal
-            gpio_set_level(RF_TX_PINO, 0); // BAIXO
+            gpio_set_level(RF_TX_PINO, 1); // BAIXO
             esp_rom_delay_us(protocol->pulseLength * protocol->zero.high);
-            gpio_set_level(RF_TX_PINO, 1); // ALTO
+            gpio_set_level(RF_TX_PINO, 0); // ALTO
             esp_rom_delay_us(protocol->pulseLength * protocol->zero.low);
-            //ESP_LOGI(TAG, "Sent 0 bit: high=%d, low=%d", protocol->zero.high, protocol->zero.low);
         }
     }
-    vTaskDelay(pdMS_TO_TICKS(100));
+    gpio_set_level(RF_TX_PINO, 1); // BAIXO
+    esp_rom_delay_us(protocol->pulseLength * protocol->syncFactor.high);
+    gpio_set_level(RF_TX_PINO, 0); // ALTO
+    esp_rom_delay_us(protocol->pulseLength * protocol->syncFactor.low);
+
 }
 
 void init_rf_transmitter(uint8_t tx_pin)
