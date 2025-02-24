@@ -1,6 +1,6 @@
 #include "main.h"
 
-void app_main() 
+void app_main()
 {
     // Inicializa o transmissor RF no pino 12
     init_rf_transmitter(RF_TX_PINO);
@@ -8,9 +8,6 @@ void app_main()
     init_rf_receiver(RF_RX_PINO);
     // Inicializa o botão no pino 14
     init_button(BUTTON_PINO);
-
-    // Loop principal para verificar se há dados recebidos
-    while (1) {
-        vTaskDelay(pdMS_TO_TICKS(10)); // Aguarda 10 ms antes de verificar novamente
-    }
+    // Inicializa o módulo BLE SPP
+    init_ble_spp();
 }

@@ -5,6 +5,7 @@
 #include "esp32_rf_receiver.c"
 #include "esp32_rf_transmitter.c"
 #include "button.c"
+#include "ble_spp_server_demo.c"
 
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"

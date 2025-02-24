@@ -1,4 +1,12 @@
 {
     "idf.portWin": "COM5",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "esp32_rf_protocol.c": "cpp",
+        "ble_spp_server_demo.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "ble_spp_server_demo.c": "cpp",
+        "button.h": "c"
+    }
 }
