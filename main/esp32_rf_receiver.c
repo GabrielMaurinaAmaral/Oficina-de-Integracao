@@ -14,7 +14,7 @@ volatile unsigned long valor_Recebido = 0; // Valor recebido
 volatile unsigned int comprimento_BIT_Recebido = 0; // Comprimento do bit recebido
 volatile unsigned int delay_Recebido = 0; // Atraso recebido
 volatile unsigned int protocolo_Recebido = 0; // Protocolo recebido
-int tolerancia_Recebida = 60; // Tolerância de recepção
+int tolerancia_Recebida = 100; // Tolerância de recepção
 const unsigned limite_separacao = 4300; // Limite de separação entre códigos recebidos
 
 unsigned int tempos[RCSWITCH_MAX_CHANGES]; // Armazena os tempos de mudança de sinal
@@ -160,16 +160,16 @@ void init_rf_receiver(uint8_t rx_pin) {
           .pull_down_en = GPIO_PULLDOWN_DISABLE
         };
 
-        printf("GPIO configurado: RF_RX_PINO=%d.\n", RF_RX_PINO);
-        printf("Aguardando inicialização...\n");
-        vTaskDelay(pdMS_TO_TICKS(100)); 
-
-
         gpio_config(&data_pin_config);
 
         gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
         gpio_isr_handler_add(RF_RX_PINO, data_interrupt_handler, NULL);
-        xTaskCreate(&receiver_rf433, "receiver_rf433", 2048, NULL, 10, NULL);
-    }
+        xTaskCreate(&receiver_rf433, "receiver_rf433", 4096, NULL, 3, NULL);
+
+        printf("GPIO configurado: RF_RX_PINO=%d.\n", RF_RX_PINO);
+        printf("Aguardando inicialização...\n");
+
+        vTaskDelay(pdMS_TO_TICKS(100)); 
+      }
   }
 }

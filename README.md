@@ -1,32 +1,53 @@
-# _Sample project_
+| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-S3 |
+| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- |
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## ESP-IDF GATT SERVER SPP Example
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+For description of this application please refer to [ESP-IDF GATT CLIENT SPP Example](../ble_spp_client/README.md)
 
+## How to Use Example
 
+Before project configuration and build, be sure to set the correct chip target using:
 
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
+```bash
+idf.py set-target <chip_name>
+```
 
-## Example folder contents
+### Hardware Required
 
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
+* A development board with ESP32/ESP32-C3/ESP32-S3/ESP32-C2/ESP32-H2 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
+* A USB cable for Power supply and programming
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
+See [Development Boards](https://www.espressif.com/en/products/devkits) for more information about it.
 
-Below is short explanation of remaining files in the project folder.
+### Build and Flash
+
+Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
+
+(To exit the serial monitor, type ``Ctrl-]``.)
+
+See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+
+## Example Output
 
 ```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
+I (4452) GATTS_SPP_DEMO: EVT 14, gatts if 3
+I (4452) GATTS_SPP_DEMO: event = e
+I (5022) GATTS_SPP_DEMO: EVT 4, gatts if 3
+I (5022) GATTS_SPP_DEMO: event = 4
+I (5152) GATTS_SPP_DEMO: EVT 2, gatts if 3
+I (5152) GATTS_SPP_DEMO: event = 2
+I (5152) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 5
+I (5242) GATTS_SPP_DEMO: EVT 2, gatts if 3
+I (5242) GATTS_SPP_DEMO: event = 2
+I (5242) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 10
+I (18462) GATTS_SPP_DEMO: EVT 5, gatts if 3
+I (18462) GATTS_SPP_DEMO: event = 5
+I (27652) GATTS_SPP_DEMO: EVT 2, gatts if 3
+I (27652) GATTS_SPP_DEMO: event = 2
+I (27652) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 2
 ```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+
+## Troubleshooting
+
+For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.

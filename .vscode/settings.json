@@ -1,12 +1,13 @@
 {
-    "idf.portWin": "COM5",
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "C:\\Users\\gabri\\esp\\v5.3.1\\esp-idf",
+    "idf.toolsPathWin": "C:\\Users\\gabri\\.espressif",
+    "idf.pythonInstallPath": "C:\\Users\\gabri\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
     "idf.flashType": "UART",
+    "idf.portWin": "COM5",
     "files.associations": {
-        "esp32_rf_protocol.c": "cpp",
-        "ble_spp_server_demo.h": "c",
-        "string.h": "c",
-        "stdio.h": "c",
-        "ble_spp_server_demo.c": "cpp",
-        "button.h": "c"
+        "esp_log.h": "c",
+        "button.h": "c",
+        "gpio.h": "c"
     }
 }

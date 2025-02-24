@@ -42,7 +42,6 @@ void button_task(void* arg) {
                     // Enviar o sinal RF continuamente enquanto o botão estiver pressionado
                     while (button_pressed) {
                         sendRFSignal(receivedData, receivedBitLength, receivedProtocol);
-                        vTaskDelay(pdMS_TO_TICKS(10)); // Pequeno delay para evitar sobrecarga
                         button_pressed = (gpio_get_level(14) == 0); // Atualiza o estado do botão
                     }
                 } else {
@@ -68,16 +67,16 @@ void init_button(uint8_t button_pin) {
                 .pull_down_en = GPIO_PULLDOWN_DISABLE
             };
 
+            gpio_config(&data_pin_BOTAO_config);
+            
+            gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
+            gpio_isr_handler_add(button_pin, button_isr_handler, NULL);
+            xTaskCreate(button_task, "button_task", 4096, NULL, 5, NULL);
+
             printf("GPIO configurado: BOTAO_PINO = %d.\n", button_pin);
             printf("Aguardando inicialização...\n");
 
             vTaskDelay(pdMS_TO_TICKS(100));
-
-            gpio_config(&data_pin_BOTAO_config);
-
-            gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
-            gpio_isr_handler_add(button_pin, button_isr_handler, NULL);
-            xTaskCreate(button_task, "button_task", 2048, NULL, 5, NULL);
         }
     }
 }
